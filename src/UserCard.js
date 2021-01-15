@@ -1,4 +1,3 @@
-import "antd/dist/antd.css"
 import { Card, Button, Typography} from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 

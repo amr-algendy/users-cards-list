@@ -1,9 +1,21 @@
+import axios from 'axios';
 import { Form, Input, Button, Drawer } from 'antd';
 
 
 const NewUser = (props) => {
 
     const [form] = Form.useForm();
+
+    const handleAddUser = values => {
+        const newUser = {...values};
+        axios.post(`https://jsonplaceholder.typicode.com/users/`, newUser)
+        .then(res => {
+            let copyArray = props.users.concat();
+            copyArray.push(res.data);
+            props.setUsers(copyArray);
+        });
+        props.handleFormHide();
+    };
 
     return (
         <Drawer
@@ -19,47 +31,47 @@ const NewUser = (props) => {
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 16 }}
                 layout='horizontal'
-                onFinish={props.handleAddUser}
+                onFinish={handleAddUser}
                 labelAlign="left"
             >
                 <Form.Item
                     label="Name"
-                    name="userName"
+                    name="name"
                     style={{ marginBottom: "10px" }}
                 >
                     <Input placeholder="Enter full name" />
                 </Form.Item>
                 <Form.Item
                     label="E-mail"
-                    name="userEmail"
+                    name="email"
                     style={{ marginBottom: "10px" }}
                 >
                     <Input placeholder="Enter email" />
                 </Form.Item>
                 <Form.Item 
                     label="Street name" 
-                    name="userStreetName" 
+                    name={['address', 'street']}
                     style={{ marginBottom: "10px" }} 
                 >
                     <Input placeholder="Enter street name" />
                 </Form.Item>
                 <Form.Item 
                     label="Suite no." 
-                    name="userSuiteNo" 
+                    name={['address', 'suite']}
                     style={{ marginBottom: "10px" }}
                 >
                     <Input placeholder="Enter suite number" />
                 </Form.Item>
                 <Form.Item 
                     label="City" 
-                    name="userCity" 
+                    name={['address', 'city']}
                     style={{ marginBottom: "10px" }}
                 >
                     <Input placeholder="Enter city name" />
                 </Form.Item>
                 <Form.Item 
                     label="Phone number" 
-                    name="userPhoneNumber" 
+                    name="phone" 
                     style={{ marginBottom: "10px" }}
                 >
                     <Input placeholder="Enter phone number" />

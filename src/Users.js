@@ -1,19 +1,41 @@
-import './Content.css'
-import "antd/dist/antd.css"
+import './Users.css'
 import {Col, Row} from 'antd';
 import UserCard from './UserCard';
 import NewUser from './NewUser';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-const Content = (props) => {
+const Users = (props) => {
+    
+    const [users, setUsers] = useState([]);
+
+    const deleteUser = (index, id) => {
+        axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+            .then(res => {
+                let copyArray = users.concat();
+                copyArray.splice(index, 1);
+                setUsers(copyArray);
+            });
+    };
+
+    useEffect(() => {
+        axios.get('https://jsonplaceholder.typicode.com/users')
+            .then(response => {
+                setUsers(response.data);
+            });
+        return () => setUsers([]);
+    }, [setUsers]);
+
     return (
         <>
             <NewUser 
+                users={users}
+                setUsers={setUsers}
                 formVisible={props.formVisible}
-                handleAddUser={props.handleAddUser}
                 handleFormHide={props.handleFormHide}
             />
             <Row gutter={[16, 16]} style={{paddingTop:"30px"}}>
-                {props.users
+                {users
                     .filter(elem => (
                         props.filterString === "" || RegExp(props.filterString.toLowerCase()).test(elem.name.toLowerCase()) 
                     ))
@@ -22,7 +44,7 @@ const Content = (props) => {
                             <UserCard 
                                 user={user}
                                 idx={idx}
-                                deleteUser={props.deleteUser}
+                                deleteUser={deleteUser}
                                 />
                         </Col>
                     ))}
@@ -31,4 +53,4 @@ const Content = (props) => {
     );
 }
 
-export default Content;
+export default Users;
