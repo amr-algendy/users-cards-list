@@ -7,7 +7,7 @@ const NewUser = (props) => {
     const [form] = Form.useForm();
 
     const handleAddUser = values => {
-        const newUser = {...values};
+        const newUser = values;
         axios.post(`https://jsonplaceholder.typicode.com/users/`, newUser)
         .then(res => {
             let copyArray = props.users.concat();
