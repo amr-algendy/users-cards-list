@@ -56,7 +56,7 @@ const FormCard = props => {
     },[props.user, form])
 
     return(
-        <Card bordered={false}
+        <Card bordered='false'
         size="small"
         style={{minHeight:"100%"}}>
             <Form

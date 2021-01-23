@@ -74,8 +74,8 @@ const Users = (props) => {
                 })}
             <Col xs={24} sm={12} md={8} lg={6} xl={6} key="new-user-card" style={{minWidth:"230px"}}>
             {
-                (newUser === 0 && props.filterString == "") && <Card 
-                    bordered={false}
+                (newUser === 0 && props.filterString === "") && <Card 
+                    bordered='false'
                     size="small"
                     style={{minHeight:"100%", display:'flex', alignItems:'center', justifyContent:'center'}}
                 >
@@ -85,12 +85,12 @@ const Users = (props) => {
                         style = {{height:'150px', width:'150px' }}
                         onClick = {() => {setNewUser(1);}}
                     >
-                        <PlusOutlined style={{fontSize : '40px', color : '#e8e8e8'}}/>
+                        <PlusOutlined style={{fontSize : '40px', color : '#e8e8e8', height:'40px'}}/>
                     </Button>
                 </Card>
             }
             {
-                (newUser === 1 && props.filterString == "") && <FormCard 
+                (newUser === 1 && props.filterString === "") && <FormCard 
                     idx={users.length}
                     user='new'
                     users={users}

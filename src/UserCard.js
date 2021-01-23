@@ -5,7 +5,7 @@ const UserCard = (props) => {
     const { Title } = Typography;
     return (<Card
         title={<Title level={5}>{props.user.name}</Title>}
-        bordered={false}
+        bordered='false'
         size="small"
         style={{minHeight:"100%"}}
     >
