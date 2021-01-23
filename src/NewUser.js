@@ -12,8 +12,11 @@ const NewUser = (props) => {
             let copyArray = props.users.concat();
             copyArray.push(res.data);
             props.setUsers(copyArray);
+            let copyStatus = props.userStatus.concat(0);
+            props.setUserStatus(copyStatus);
+            form.resetFields();
+            props.handleFormHide();
         });
-        props.handleFormHide();
     };
 
     return (
@@ -76,7 +79,7 @@ const NewUser = (props) => {
                     <Input placeholder="Enter phone number" />
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 14, offset: 0 }} name="submit-button">
-                    <Button type="primary" htmlType="submit" onClick={form.resetFields()}>Submit</Button>
+                    <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
             </Form>
         </Drawer>
