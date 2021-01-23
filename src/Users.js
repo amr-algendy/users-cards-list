@@ -1,15 +1,16 @@
 import './Users.css'
-import {Col, Row} from 'antd';
+import {Button, Col, Row, Card} from 'antd';
 import UserCard from './UserCard';
-import NewUser from './NewUser';
 import FormCard from './FormCard';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
 
 const Users = (props) => {
     
     const [users, setUsers] = useState([]);
     const [userStatus, setUserStatus] = useState([]);
+    const [newUser, setNewUser] = useState(0);
 
     const deleteUser = (index, id) => {
         axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
@@ -37,52 +38,70 @@ const Users = (props) => {
                 arr.length = response.data.length;
                 setUserStatus(arr.fill(0));
             });
-        return () =>    {
-                            setUsers([]);
-                            setUserStatus([]);
-                        };
+        return () => {
+            setUsers([]);
+            setUserStatus([]);
+        };
     }, []);
 
     return (
-        <>
-            <NewUser 
-                users={users}
-                setUsers={setUsers}
-                userStatus={userStatus}
-                setUserStatus={setUserStatus}
-                formVisible={props.formVisible}
-                handleFormHide={props.handleFormHide}
-            />
-            <Row gutter={[16, 16]} style={{paddingTop:"30px"}}>
-                {users
-                    .filter(elem => (
-                        props.filterString === "" || RegExp(props.filterString.toLowerCase()).test(elem.name.toLowerCase()) 
-                    ))
-                    .map((user, idx) => {
-                        return (<Col xs={24} sm={12} md={8} lg={6} xl={6} key={user.id} style={{minWidth:"230px"}}>
-                            {
-                                (userStatus[idx] === 0) && <UserCard
-                                    user={user}
-                                    idx={idx}
-                                    deleteUser={deleteUser}
-                                    editEnable={editEnable}
-                                />
-                            }
-                            {
-                                (userStatus[idx] === 1) && <FormCard 
-                                    idx={idx}
-                                    user={user}
-                                    users={users}
-                                    setUsers={setUsers}
-                                    userStatus={userStatus}
-                                    setUserStatus={setUserStatus}
-                                />
-                            }
-                        </Col>);
-                    })}
-                    
-            </Row>
-        </>
+        <Row gutter={[16, 16]} style={{paddingTop:"112px"}}>
+            {users
+                .filter(elem => (
+                    props.filterString === "" || RegExp(props.filterString.toLowerCase()).test(elem.name.toLowerCase()) 
+                ))
+                .map((user, idx) => {
+                    return (<Col xs={24} sm={12} md={8} lg={6} xl={6} key={user.id} style={{minWidth:"230px"}}>
+                        {
+                            (userStatus[idx] === 0) && <UserCard
+                                user={user}
+                                idx={idx}
+                                deleteUser={deleteUser}
+                                editEnable={editEnable}
+                            />
+                        }
+                        {
+                            (userStatus[idx] === 1) && <FormCard 
+                                idx={idx}
+                                user={user}
+                                users={users}
+                                setUsers={setUsers}
+                                userStatus={userStatus}
+                                setUserStatus={setUserStatus}
+                            />
+                        }
+                    </Col>);
+                })}
+            <Col xs={24} sm={12} md={8} lg={6} xl={6} key="new-user-card" style={{minWidth:"230px"}}>
+            {
+                (newUser === 0 && props.filterString == "") && <Card 
+                    bordered={false}
+                    size="small"
+                    style={{minHeight:"100%", display:'flex', alignItems:'center', justifyContent:'center'}}
+                >
+                    <Button
+                        shape = 'circle'
+                        type = 'dashed'
+                        style = {{height:'150px', width:'150px' }}
+                        onClick = {() => {setNewUser(1);}}
+                    >
+                        <PlusOutlined style={{fontSize : '40px', color : '#e8e8e8'}}/>
+                    </Button>
+                </Card>
+            }
+            {
+                (newUser === 1 && props.filterString == "") && <FormCard 
+                    idx={users.length}
+                    user='new'
+                    users={users}
+                    setUsers={setUsers}
+                    userStatus={userStatus}
+                    setNewUser={setNewUser}
+                    setUserStatus={setUserStatus}
+                />
+            }
+            </Col>
+        </Row>
     );
 }
 

@@ -7,21 +7,48 @@ const FormCard = props => {
 
     const [form] = Form.useForm();
 
-    const handleConfirmEdit = (values, idx, id) => {
-        let copyArr = values;
-        let copyUsers = [...props.users];
-        axios.patch(`https://jsonplaceholder.typicode.com/users/${id}`, copyArr)
-        .then( res => {
-            copyUsers[idx] = res.data;
-            props.setUsers(copyUsers);
-            handleCancelEdit();
+    const handleAddUser = (values) => {
+        axios.post(`https://jsonplaceholder.typicode.com/users/`, values)
+        .then(res => {
+            let copyArray = props.users.concat();
+            copyArray.push(res.data);
+            props.setUsers(copyArray);
+            let copyStatus = props.userStatus.concat(0);
+            props.setUserStatus(copyStatus);
+            form.resetFields();
+            props.setNewUser(0);
         });
     };
 
+    const handleConfirmEdit = (values, idx, id) => {
+        if(props.user === 'new')
+        {
+            handleAddUser(values);
+        }
+        else
+        {
+            let copyArr = values;
+            let copyUsers = [...props.users];
+            axios.patch(`https://jsonplaceholder.typicode.com/users/${id}`, copyArr)
+            .then( res => {
+                copyUsers[idx] = res.data;
+                props.setUsers(copyUsers);
+                handleCancelEdit();
+            });
+        }
+    };
+
     const handleCancelEdit = () => {
-        let copyArr = [...props.userStatus];
-        copyArr[props.idx] = 0;
-        props.setUserStatus(copyArr);
+        if(props.user === 'new')
+        {
+            props.setNewUser(0);
+        }
+        else
+        {
+            let copyArr = [...props.userStatus];
+            copyArr[props.idx] = 0;
+            props.setUserStatus(copyArr);
+        }
     };
 
     useEffect (() => {
@@ -44,13 +71,13 @@ const FormCard = props => {
                     name="name"
                     style={{ marginBottom: "2px" }}
                 >
-                    <Input/>
+                    <Input placeholder="Enter full name"/>
                 </Form.Item>
                 <Form.Item
                     name="email"
                     style={{ marginBottom: "2px" }}
                 >
-                    <Input/>
+                    <Input placeholder="Enter e-mail"/>
                 </Form.Item>
                 <Form.Item 
                     style={{ marginBottom: "2px" }} 
@@ -60,12 +87,12 @@ const FormCard = props => {
                             name={['address', 'street']}
                             noStyle
                         >
-                            <Input style={{ width: '50%'}}/>
+                            <Input style={{ width: '50%'}} placeholder="Enter st. name"/>
                         </Form.Item>
                         <Form.Item name={['address', 'suite']}
                             noStyle
                         >
-                            <Input style={{ width: '50%'}}/>
+                            <Input style={{ width: '50%'}} placeholder="Enter suite no."/>
                         </Form.Item>
                     </Input.Group>
                 </Form.Item>
@@ -73,23 +100,23 @@ const FormCard = props => {
                     name="phone" 
                     style={{ marginBottom: "1px"}}
                 >
-                    <Input/>
+                    <Input placeholder="Enter phone number"/>
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 24, offset: 0 }}
                     style={{position:'absolute', bottom:'6px', right:'7px', marginBottom: "4px" }}>
-                    <Button
-                        type="primary"
-                        danger shape="circle"
-                        onClick={handleCancelEdit}
-                        icon = {<CloseOutlined style={{ fontSize: 18 }} />}
-                        style = {{marginRight: '3px'}}
-                    />
                     <Button 
                         type="primary" 
                         shape="circle"
                         htmlType="submit" 
                         icon = {<CheckOutlined style={{ fontSize: 18 }} />}
                         style= {{marginRight: '3px', backgroundColor:'#28a745', borderColor: '#28a745'}}
+                    />
+                    <Button
+                        type="primary"
+                        danger shape="circle"
+                        onClick={handleCancelEdit}
+                        icon = {<CloseOutlined style={{ fontSize: 18 }} />}
+                        style = {{marginRight: '3px'}}
                     />
                 </Form.Item>
             </Form>

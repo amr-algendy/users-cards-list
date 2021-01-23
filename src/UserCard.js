@@ -11,7 +11,7 @@ const UserCard = (props) => {
     >
         <div style={{paddingBottom:"23px"}}>
             <p style={{wordWrap:'break-word'}}>{props.user.email}</p>
-            <p style={{wordWrap:'break-word'}}>{props.user.address.street}, {props.user.address.suite}</p>
+            <p style={{wordWrap:'break-word'}}>{props.user.address.street}{(props.user.address.suite !== undefined)?(`, ${props.user.address.suite}`):''}</p>
             <p>{props.user.phone}</p>
             <div style={{position:'absolute', bottom:'10px', right:'10px'}}>
                 <Button
